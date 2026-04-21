@@ -12,52 +12,52 @@ cd your-repo-name
 npm install
 
 3️⃣ **Setup Redis**
-Use Cloud Redis
-Use Redis Cloud / Upstash
-Copy the connection URL
+- Use Cloud Redis
+- Use Redis Cloud / Upstash
+- Copy the connection URL
 
 4️⃣ **Configure Environment Variables**
-Create a .env.local file in root:
-REDIS_URL=your_redis_connection_url
+- Create a .env.local file in root:
+- REDIS_URL=your_redis_connection_url
 
 5️⃣ **Start the Application**
-npm run dev
-👉 Server will run on:
-http://localhost:3000
+- npm run dev
+- 👉 Server will run on:
+- http://localhost:3000
 
 
 🧪 **Testing APIs Using Postman**
 🔹 Base URL
-http://localhost:3000
+- http://localhost:3000
 🔥 **1. Test Main Requests API (Rate Limited)**
 **Endpoint
 ****POST /api/requests**
 
 **Steps in Postman**
- Open Postman
-   Select POST method
-     Enter URL:
-       http://localhost:3000/api/requests
-         Go to Body → raw → JSON
-**Add sample request body:
+ - Open Postman
+ -   Select POST method
+   -   Enter URL:
+      -  http://localhost:3000/api/requests
+      -    Go to Body → raw → JSON
+- **Add sample request body:
 {
   "userId": "user-1",
   "action": "test-request"
 }**
 Click Send
 
-✅**Expected Behavior**
+- ✅**Expected Behavior**
 First few requests → 200 OK
 After limit exceeded → 429 Too Many Requests
 
-🧪 **How to Properly Test Rate Limiting**
+- 🧪 **How to Properly Test Rate Limiting**
 Click Send multiple times quickly (10–15 times)
 You should start seeing:
 429 Too Many Requests
 
 👉 This proves rate limiting is working
 
-🔁 **2. Test Retry Queue API**
+- 🔁 **2. Test Retry Queue API**
 Endpoint
 POST /api/retry
 Steps in Postman
@@ -71,24 +71,24 @@ Steps in Postman
   "attempt": 1
 }**
 Click Send
-✅ **Expected Behavior**
-Request gets added to Redis queue
-Worker (worker.ts) processes it
-You’ll see logs in terminal
+- ✅ **Expected Behavior**
+- Request gets added to Redis queue
+- Worker (worker.ts) processes it
+- You’ll see logs in terminal
 
 🔍 **How to Verify**
-Check your terminal running Next.js:
-Processing job: retry-job
+- Check your terminal running Next.js:
+- Processing job: retry-job
 👉 This confirms queue + retry logic works
 
 📊 **3. Test Stats API**
-Endpoint
-GET /api/stats
-Steps in Postman
-Select GET
-Enter URL:
-http://localhost:3000/api/stats
-Click Send
+- Endpoint
+- GET /api/stats
+- Steps in Postman
+- Select GET
+- Enter URL:
+- http://localhost:3000/api/stats
+- Click Send
 
 ✅ **Expected Response Example**
 **{
@@ -190,52 +190,52 @@ Queue size
 - Increments a counter
 - Counter resets after TTL expires
 - Why chosen:
-Simple to implement
-Efficient for most use cases
-Minimal overhead
-Trade-off:
+- Simple to implement
+- Efficient for most use cases
+- Minimal overhead
+- Trade-off:
 Allows burst traffic at window boundaries
 
 🔐 **3. Atomic Operations for Concurrency Safety**
-Used Redis commands like:
-INCR
-EXPIRE
+- Used Redis commands like:
+- INCR
+- EXPIRE
 👉 Ensures:
-No race conditions
-Accurate counting under concurrent requests
+- No race conditions
+- Accurate counting under concurrent requests
 
 🧩 **4. Key Design Strategy**
-Example key:
+- Example key:
 rate_limit:{userId}
-Why:
-Easy to track per-user usage
-Scalable and extendable to:
-rate_limit:{userId}:{endpoint}
+- Why:
+- Easy to track per-user usage
+- Scalable and extendable to:
+- rate_limit:{userId}:{endpoint}
 
 ⚖️ **5. Stateless API Design**
-Rate limiter logic is stateless at application level
-All state stored in Redis
+- Rate limiter logic is stateless at application level
+- All state stored in Redis
 
 👉 **Benefits:**
-Easy horizontal scaling
-Multiple instances share same limit state
+- Easy horizontal scaling
+- Multiple instances share same limit state
 
 🚫 **6. Hard Limit Enforcement**
-Once limit is exceeded:
-API returns 429 Too Many Requests
+- Once limit is exceeded:
+- API returns 429 Too Many Requests
 
 👉 Simple and predictable behavior for clients
 
 🔁**7. **TTL-Based Reset Mechanism****
-Used Redis TTL (EXPIRE) for automatic reset
+- Used Redis TTL (EXPIRE) for automatic reset
 
 👉 **Avoids:**
-Manual cleanup
-Extra cron jobs
+- Manual cleanup
+- Extra cron jobs
 
 ⚙️ **8. Lightweight Middleware Approach**
-Rate limiting applied at API layer (before business logic)
+- Rate limiting applied at API layer (before business logic)
 
 👉**Benefits:**
-Protects backend resources early
-Reduces unnecessary processing
+- Protects backend resources early
+- Reduces unnecessary processing

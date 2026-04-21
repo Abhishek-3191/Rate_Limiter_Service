@@ -1,4 +1,6 @@
+
 **RATE LIMITER SERVICE**
+
 
 ▶️ **Steps to Run the Project**
 
@@ -100,89 +102,94 @@ Total API hits
 Rate-limited requests
 Queue size
 
+
+
+
 📈 **What I Would Improve With More Time (Rate Limiter Service)**
 
 ⚙️ **1. Advanced Rate Limiting Algorithms**
-Current implementation likely uses a fixed window counter
-Improve with:
-Sliding Window Log → more accurate control
-Token Bucket / Leaky Bucket → smoother traffic handling
-This prevents sudden bursts at window boundaries
+- Current implementation likely uses a fixed window counter
+- Improve with:
+- Sliding Window Log → more accurate control
+- Token Bucket / Leaky Bucket → smoother traffic handling
+- This prevents sudden bursts at window boundaries
 
 🎯 **2. Granular & Dynamic Limits**
-Add support for:
-Per-user limits
-Per-IP limits
-Per-endpoint limits
-Enable dynamic configuration (e.g., premium users get higher limits)
+- Add support for:
+- Per-user limits
+- Per-IP limits
+- Per-endpoint limits
+- Enable dynamic configuration (e.g., premium users get higher limits)
 
 ⚡ **3. Distributed Rate Limiting**
-Ensure consistency across multiple server instances
-Use Redis with:
-Atomic operations (INCR, EXPIRE)
-Lua scripts for strong consistency
-This makes it scalable in multi-instance deployments
+- Ensure consistency across multiple server instances
+- Use Redis with:
+- Atomic operations (INCR, EXPIRE)
+- Lua scripts for strong consistency
+- This makes it scalable in multi-instance deployments
 
 🧠 **4. Smarter Key Design**
-Improve Redis key structure:
-rate_limit:{userId}:{endpoint}
-Helps:
-Better tracking
-Easier debugging
-More control over limits
+- Improve Redis key structure:
+- rate_limit:{userId}:{endpoint}
+- Helps:
+- Better tracking
+- Easier debugging
+- More control over limits
 
 📊 **5. Observability & Metrics**
-Track:
-Requests per second
-Rate-limited requests
-Burst traffic patterns
-Integrate:
-Prometheus + Grafana
-Helps in real-time monitoring and tuning
+- Track:
+- Requests per second
+- Rate-limited requests
+- Burst traffic patterns
+- Integrate:
+- Prometheus + Grafana
+- Helps in real-time monitoring and tuning
 
 🔐 **6. Abuse & Security Protection**
-Detect suspicious patterns:
-Rapid bursts
-Bot-like behavior
-Add:
-Temporary IP bans
-CAPTCHA trigger (if needed)
+- Detect suspicious patterns:
+- Rapid bursts
+- Bot-like behavior
+- Add:
+- Temporary IP bans
+- CAPTCHA trigger (if needed)
 
 🔁 **7. Graceful Degradation**
-Instead of hard blocking:
-Return Retry-After headers
-Provide fallback responses
-Improves user experience under load
+- Instead of hard blocking:
+- Return Retry-After headers
+- Provide fallback responses
+- Improves user experience under load
 
 ⚡ **8. Performance Optimization**
-Use:
-Redis pipelining
-Lua scripts to reduce network calls
-Reduce latency in high-throughput systems
+- Use:
+- Redis pipelining
+- Lua scripts to reduce network calls
+- Reduce latency in high-throughput systems
 
 🧪 **9. Testing Under Load**
-Simulate real-world traffic using:
-k6 / JMeter
-Validate:
-Accuracy of rate limits
-Behavior under concurrency
+- Simulate real-world traffic using:
+- k6 / JMeter
+- Validate:
+- Accuracy of rate limits
+- Behavior under concurrency
+
+
 
 🧠 **Design Decisions (Rate Limiter Service)**
 
 ⚡ **1. Using Redis as the Core Store**
-Chose Redis because:
-In-memory → low latency
-Supports atomic operations like INCR, EXPIRE
-Ideal for high-throughput systems
+- Chose Redis because:
+- In-memory → low latency
+- Supports atomic operations like INCR, EXPIRE
+- Ideal for high-throughput systems
 
-👉 This ensures fast and consistent rate limit checks.
+- 👉 This ensures fast and consistent rate limit checks.
 
 ⏱️ **2. Fixed Window Counter Approach**
-Implemented a fixed time window (e.g., per minute)
-Each request:
-Increments a counter
-Counter resets after TTL expires
-Why chosen:
+- Implemented a fixed time window (e.g., per minute)
+- Each request:
+- Increments a counter
+- Counter resets after TTL expires
+- Why chosen:
 Simple to implement
 Efficient for most use cases
 Minimal overhead

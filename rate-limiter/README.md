@@ -226,7 +226,7 @@ rate_limit:{userId}
 
 👉 Simple and predictable behavior for clients
 
-🔁**7. **TTL-Based Reset Mechanism****
+🔁**7. TTL-Based Reset Mechanism**
 - Used Redis TTL (EXPIRE) for automatic reset
 
 👉 **Avoids:**
